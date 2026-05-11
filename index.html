@@ -34,6 +34,7 @@
     font-size: 14px;
   }
 
+  /* ── Header ── */
   .site-header {
     background: linear-gradient(135deg, #E8920A 0%, #FFB800 55%, #FF6B00 100%);
     color: #fff;
@@ -80,6 +81,7 @@
   }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
 
+  /* ── El Diablo banner ── */
   .diablo-banner {
     display: none;
     background: #CC2200;
@@ -95,6 +97,58 @@
   @keyframes flicker { from{opacity:1} to{opacity:0.72} }
   .diablo-banner.show { display: block; }
 
+  /* ── Quote of the day banner ── */
+  .quote-banner {
+    background: #FFF8E0;
+    border-bottom: 1.5px solid #F0D888;
+    padding: 14px 2rem;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 56px;
+  }
+  .quote-banner-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+    opacity: 0.8;
+  }
+  .quote-banner-text {
+    flex: 1;
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #7A4A00;
+    font-style: italic;
+    line-height: 1.4;
+  }
+  .quote-banner-text span {
+    font-weight: 400;
+    font-size: 11px;
+    color: var(--text3);
+    font-style: normal;
+    margin-left: 8px;
+    white-space: nowrap;
+  }
+  .quote-banner-shuffle {
+    background: none;
+    border: 1.5px solid var(--border2);
+    border-radius: 99px;
+    padding: 5px 12px;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text3);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .quote-banner-shuffle:hover { border-color: var(--accent); color: var(--accent-dark); }
+  .quote-banner-empty {
+    color: var(--text3);
+    font-size: 12px;
+    font-style: italic;
+  }
+
+  /* ── Layout ── */
   .container {
     max-width: 1100px;
     margin: 0 auto;
@@ -106,6 +160,7 @@
   }
   @media(max-width: 800px) { .container { grid-template-columns: 1fr; } }
 
+  /* ── Cards ── */
   .card {
     background: var(--surface);
     border: 1.5px solid var(--border);
@@ -128,6 +183,7 @@
   }
   .card-body { padding: 20px; }
 
+  /* ── Form elements ── */
   label {
     display: block;
     font-size: 11px;
@@ -137,7 +193,7 @@
     color: var(--text3);
     margin-bottom: 6px;
   }
-  input[type=text], input[type=date], select {
+  input[type=text], input[type=date], select, textarea {
     width: 100%;
     background: var(--bg);
     border: 1.5px solid var(--border);
@@ -148,10 +204,12 @@
     color: var(--text);
     transition: border-color 0.15s;
     outline: none;
+    resize: vertical;
   }
-  input:focus, select:focus { border-color: var(--accent); background: #fff; }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); background: #fff; }
   .field { margin-bottom: 14px; }
 
+  /* ── Slider ── */
   .slider-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
   input[type=range] {
     flex: 1;
@@ -187,6 +245,7 @@
   .slider-emoji { font-size: 28px; min-width: 36px; text-align: center; }
   .slider-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text3); letter-spacing: 0.03em; margin-bottom: 16px; }
 
+  /* ── Mood ring ── */
   .mood-ring { display: flex; gap: 4px; margin-bottom: 12px; }
   .mood-ring-dot { flex: 1; height: 6px; border-radius: 3px; background: var(--border); transition: background 0.2s; }
 
@@ -205,6 +264,7 @@
     transition: all 0.25s;
   }
 
+  /* ── Bonus buttons ── */
   .bonus-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
   .bonus-btn {
     background: var(--bg);
@@ -239,6 +299,7 @@
   .add-bonus-row { display: flex; gap: 6px; }
   .add-bonus-row input { flex: 1; font-size: 12px; padding: 7px 10px; }
 
+  /* ── Buttons ── */
   .btn-primary {
     width: 100%;
     background: linear-gradient(135deg, #E8920A 0%, #FFB800 100%);
@@ -267,10 +328,24 @@
     cursor: pointer;
     color: var(--text2);
     transition: all 0.15s;
+    white-space: nowrap;
   }
   .btn-sm:hover { border-color: var(--accent); }
+  .btn-danger {
+    background: none;
+    border: none;
+    color: #A03020;
+    cursor: pointer;
+    font-size: 13px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: background 0.1s;
+    font-family: 'DM Mono', monospace;
+  }
+  .btn-danger:hover { background: #FFEEEE; }
 
-  .tabs { display: flex; border-bottom: 1.5px solid var(--border); background: var(--surface2); padding: 0 20px; }
+  /* ── Tabs ── */
+  .tabs { display: flex; border-bottom: 1.5px solid var(--border); background: var(--surface2); padding: 0 20px; overflow-x: auto; }
   .tab {
     padding: 12px 16px;
     font-family: 'Syne', sans-serif;
@@ -288,6 +363,7 @@
   .tab:hover { color: var(--text2); }
   .tab.active { color: var(--accent-dark); border-bottom-color: var(--accent); }
 
+  /* ── Log table ── */
   .log-scroll { max-height: 440px; overflow-y: auto; }
   table { width: 100%; border-collapse: collapse; font-size: 12px; }
   th {
@@ -329,6 +405,36 @@
     margin: 2px 2px 2px 0;
   }
 
+  /* ── Quote cards ── */
+  .quote-list { display: flex; flex-direction: column; gap: 10px; padding: 20px; max-height: 440px; overflow-y: auto; }
+  .quote-card {
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .quote-card-mark {
+    font-size: 22px;
+    flex-shrink: 0;
+    line-height: 1;
+    margin-top: 1px;
+  }
+  .quote-card-body { flex: 1; min-width: 0; }
+  .quote-card-text {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #7A4A00;
+    font-style: italic;
+    line-height: 1.45;
+    margin-bottom: 5px;
+  }
+  .quote-card-meta { font-size: 10px; color: var(--text3); letter-spacing: 0.03em; }
+
+  /* ── Stats row ── */
   .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1rem; }
   .stat-card {
     background: var(--surface);
@@ -347,8 +453,10 @@
   }
   .stat-label { font-size: 10px; color: var(--text3); letter-spacing: 0.05em; text-transform: uppercase; }
 
+  /* ── Chart ── */
   .chart-wrap { position: relative; width: 100%; }
 
+  /* ── Toast ── */
   .toast {
     position: fixed;
     bottom: 24px; right: 24px;
@@ -368,7 +476,7 @@
 
   .empty { text-align: center; padding: 3rem 1rem; color: var(--text3); font-size: 13px; }
   .empty .big { font-size: 40px; margin-bottom: 8px; }
-  .loading { text-align: center; padding: 2rem; color: var(--text3); font-size: 12px; letter-spacing: 0.05em; }
+  .loading { text-align: center; padding: 2rem; color: var(--text3); font-size: 12px; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .spinner {
     display: inline-block; width: 16px; height: 16px;
@@ -402,8 +510,18 @@
   </div>
 </header>
 
+<!-- Quote of the day banner -->
+<div class="quote-banner" id="quoteBanner">
+  <div class="quote-banner-icon">💬</div>
+  <div class="quote-banner-text" id="quoteText">
+    <span class="quote-banner-empty">No quotes yet — add Don Abel's finest below in the Quotes tab!</span>
+  </div>
+  <button class="quote-banner-shuffle" onclick="showRandomQuote()" id="shuffleBtn" style="display:none;">🔀 Another one</button>
+</div>
+
 <div class="container">
 
+  <!-- LEFT: Log form -->
   <div>
     <div class="card">
       <div class="card-header">🌶️ Log Today's Don Abel</div>
@@ -475,6 +593,7 @@
     </div>
   </div>
 
+  <!-- RIGHT: Tabs -->
   <div class="right-panel">
     <div class="stats-row">
       <div class="stat-card"><div class="stat-val" id="statTotal">—</div><div class="stat-label">Total logs</div></div>
@@ -488,14 +607,17 @@
         <div class="tab active" onclick="switchTab('history',this)">History</div>
         <div class="tab" onclick="switchTab('chart',this)">Weekly chart</div>
         <div class="tab" onclick="switchTab('bonus-chart',this)">Bonus tracker</div>
+        <div class="tab" onclick="switchTab('quotes',this)">💬 Quotes</div>
       </div>
 
+      <!-- History -->
       <div class="tab-panel active" id="panel-history">
         <div class="log-scroll" id="historyTable">
           <div class="loading"><span class="spinner"></span>Loading entries...</div>
         </div>
       </div>
 
+      <!-- Chart -->
       <div class="tab-panel" id="panel-chart">
         <div class="card-body">
           <div class="week-select">
@@ -513,6 +635,7 @@
         </div>
       </div>
 
+      <!-- Bonus chart -->
       <div class="tab-panel" id="panel-bonus-chart">
         <div class="card-body">
           <div class="chart-wrap" style="height:300px;">
@@ -520,6 +643,27 @@
           </div>
         </div>
       </div>
+
+      <!-- Quotes -->
+      <div class="tab-panel" id="panel-quotes">
+        <div class="card-body" style="border-bottom:1.5px solid var(--border);">
+          <div class="field">
+            <label>The quote</label>
+            <textarea id="quoteInput" rows="2" placeholder="e.g. &quot;I am not angry, I am PASSIONATE!&quot;"></textarea>
+          </div>
+          <div style="display:flex;gap:8px;align-items:flex-end;">
+            <div class="field" style="flex:1;margin-bottom:0;">
+              <label>Context (optional)</label>
+              <input type="text" id="quoteContext" placeholder="e.g. during the Monday standup">
+            </div>
+            <button class="btn-sm" style="margin-bottom:0;" onclick="addQuote()">+ Save quote</button>
+          </div>
+        </div>
+        <div id="quoteList">
+          <div class="empty"><div class="big">💬</div>No quotes yet.<br>Start capturing the legend's wisdom.</div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -528,10 +672,11 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-const LOGS_KEY = 'don-abel-logs-v1';
+const LOGS_KEY    = 'don-abel-logs-v1';
 const BONUSES_KEY = 'don-abel-custom-bonuses-v1';
+const QUOTES_KEY  = 'don-abel-quotes-v1';
 
-let logs = [];
+let logs = [], quotes = [];
 let bonusActive = {};
 let customBonuses = JSON.parse(localStorage.getItem(BONUSES_KEY) || '[]');
 let chartInst = null, bonusChartInst = null, currentTab = 'history';
@@ -548,19 +693,79 @@ document.addEventListener('DOMContentLoaded', () => {
   buildMoodRing(5);
   updateLevelBadge(5);
   renderCustomBonuses();
-  loadLogs();
+  loadAll();
 });
 
 function todayStr() { return new Date().toISOString().split('T')[0]; }
 
-function loadLogs() {
-  try { logs = JSON.parse(localStorage.getItem(LOGS_KEY) || '[]'); } catch(e) { logs = []; }
+function loadAll() {
+  try { logs   = JSON.parse(localStorage.getItem(LOGS_KEY)   || '[]'); } catch(e) { logs = []; }
+  try { quotes = JSON.parse(localStorage.getItem(QUOTES_KEY) || '[]'); } catch(e) { quotes = []; }
   refreshAll();
-}
-function saveLogs() {
-  try { localStorage.setItem(LOGS_KEY, JSON.stringify(logs)); } catch(e) {}
+  showRandomQuote();
 }
 
+function saveLogs()   { try { localStorage.setItem(LOGS_KEY,   JSON.stringify(logs));   } catch(e) {} }
+function saveQuotes() { try { localStorage.setItem(QUOTES_KEY, JSON.stringify(quotes)); } catch(e) {} }
+
+/* ── Quote banner ── */
+function showRandomQuote() {
+  const textEl    = document.getElementById('quoteText');
+  const shuffleEl = document.getElementById('shuffleBtn');
+  if (!quotes.length) {
+    textEl.innerHTML = '<span class="quote-banner-empty">No quotes yet — add Don Abel\'s finest in the Quotes tab!</span>';
+    shuffleEl.style.display = 'none';
+    return;
+  }
+  const q = quotes[Math.floor(Math.random() * quotes.length)];
+  textEl.innerHTML = `"${escHtml(q.text)}"${q.context ? `<span>— ${escHtml(q.context)}</span>` : ''}`;
+  shuffleEl.style.display = quotes.length > 1 ? '' : 'none';
+}
+
+/* ── Add / render quotes ── */
+function addQuote() {
+  const text    = document.getElementById('quoteInput').value.trim();
+  const context = document.getElementById('quoteContext').value.trim();
+  if (!text) { showToast('Type a quote first!'); return; }
+  quotes.unshift({ id: Date.now(), text, context, date: todayStr() });
+  saveQuotes();
+  document.getElementById('quoteInput').value = '';
+  document.getElementById('quoteContext').value = '';
+  renderQuotes();
+  showRandomQuote();
+  showToast('Quote saved! 💬');
+}
+
+function deleteQuote(id) {
+  quotes = quotes.filter(q => q.id !== id);
+  saveQuotes();
+  renderQuotes();
+  showRandomQuote();
+}
+
+function renderQuotes() {
+  const cont = document.getElementById('quoteList');
+  if (!quotes.length) {
+    cont.innerHTML = '<div class="empty"><div class="big">💬</div>No quotes yet.<br>Start capturing the legend\'s wisdom.</div>';
+    return;
+  }
+  cont.innerHTML = '<div class="quote-list">' + quotes.map(q => `
+    <div class="quote-card">
+      <div class="quote-card-mark">❝</div>
+      <div class="quote-card-body">
+        <div class="quote-card-text">${escHtml(q.text)}</div>
+        <div class="quote-card-meta">${q.context ? escHtml(q.context) + ' · ' : ''}${q.date}</div>
+      </div>
+      <button class="btn-danger" onclick="deleteQuote(${q.id})" title="Delete">✕</button>
+    </div>
+  `).join('') + '</div>';
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ── Slider ── */
 function updateSlider(v) {
   v = parseInt(v);
   document.getElementById('moodVal').textContent = v;
@@ -591,6 +796,7 @@ function buildMoodRing(v) {
   }
 }
 
+/* ── Bonus buttons ── */
 function toggleBonus(key, label, el) {
   if (bonusActive[key]) {
     bonusActive[key].count++;
@@ -626,10 +832,11 @@ function renderCustomBonuses() {
   });
 }
 
+/* ── Submit log ── */
 function submitLog() {
-  const mood = parseInt(document.getElementById('moodSlider').value);
-  const date = document.getElementById('logDate').value;
-  const by   = document.getElementById('loggedBy').value.trim() || 'Anonymous';
+  const mood  = parseInt(document.getElementById('moodSlider').value);
+  const date  = document.getElementById('logDate').value;
+  const by    = document.getElementById('loggedBy').value.trim() || 'Anonymous';
   const notes = document.getElementById('logNotes').value.trim();
   if (!date) { showToast('Pick a date first!'); return; }
 
@@ -652,9 +859,11 @@ function submitLog() {
   switchTab('history', document.querySelectorAll('.tab')[0]);
 }
 
+/* ── Refresh ── */
 function refreshAll() {
   updateStats();
   renderHistory();
+  renderQuotes();
   if (currentTab === 'chart') renderChart();
   if (currentTab === 'bonus-chart') renderBonusChart();
   document.getElementById('entryCount').textContent = logs.length + (logs.length === 1 ? ' entry' : ' entries');
@@ -680,9 +889,9 @@ function renderHistory() {
   }
   let html = `<table><thead><tr><th>Date</th><th>Mood</th><th>Level</th><th>Bonuses</th><th>By</th><th>Notes</th></tr></thead><tbody>`;
   logs.forEach(e => {
-    const col   = MOOD_COLORS[e.mood-1];
+    const col  = MOOD_COLORS[e.mood-1];
     const label = MOOD_LABELS[e.mood-1];
-    const tags  = (e.bonuses||[]).map(b=>`<span class="tag">${b.label.slice(0,22)}${b.count>1?' ×'+b.count:''}</span>`).join('');
+    const tags  = (e.bonuses||[]).map(b=>`<span class="tag">${escHtml(b.label.slice(0,22))}${b.count>1?' ×'+b.count:''}</span>`).join('');
     html += `<tr style="${e.mood===10?'background:#FFF0F0;':''}">
       <td style="white-space:nowrap;color:var(--text2);">${e.date}</td>
       <td style="text-align:center;font-size:20px;">${EMOJIS[e.mood-1]}</td>
@@ -695,6 +904,7 @@ function renderHistory() {
   cont.innerHTML = html + '</tbody></table>';
 }
 
+/* ── Charts ── */
 function getWeekStart(dateStr) {
   const d = new Date(dateStr), day = d.getDay();
   const m = new Date(d); m.setDate(d.getDate()-day+(day===0?-6:1));
@@ -713,8 +923,7 @@ function renderChart() {
   if (chartInst) chartInst.destroy();
   chartInst = new Chart(document.getElementById('moodChart'), {
     type: 'line',
-    data: { labels, datasets: [{
-      label: 'Avg passion', data: avgs,
+    data: { labels, datasets: [{ label: 'Avg passion', data: avgs,
       borderColor: '#E8920A', backgroundColor: 'rgba(232,146,10,0.10)',
       borderWidth: 2.5, fill: true, tension: 0.45,
       pointBackgroundColor: avgs.map(v=>MOOD_COLORS[Math.round(v)-1]),
@@ -722,13 +931,10 @@ function renderChart() {
     }]},
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => {
-          const v = Math.round(ctx.parsed.y);
-          return ` ${ctx.parsed.y}/10 — ${MOOD_LABELS[v-1]}`;
-        }}}
-      },
+      plugins: { legend:{ display:false }, tooltip:{ callbacks:{ label: ctx => {
+        const v = Math.round(ctx.parsed.y);
+        return ` ${ctx.parsed.y}/10 — ${MOOD_LABELS[v-1]}`;
+      }}}},
       scales: {
         y: { min:0, max:10, ticks:{stepSize:2,color:'#A88030'}, grid:{color:'rgba(200,160,40,0.15)'}, border:{color:'#F0D888'} },
         x: { ticks:{color:'#A88030',autoSkip:false,maxRotation:30}, grid:{display:false}, border:{color:'#F0D888'} }
@@ -748,15 +954,14 @@ function renderBonusChart() {
   if (bonusChartInst) bonusChartInst.destroy();
   bonusChartInst = new Chart(document.getElementById('bonusChart'), {
     type: 'bar',
-    data: { labels, datasets: [{
-      label: 'Incidents', data,
+    data: { labels, datasets: [{ label: 'Incidents', data,
       backgroundColor: data.map((_,i)=>cols[i%cols.length]+'BB'),
       borderColor: data.map((_,i)=>cols[i%cols.length]),
       borderWidth: 1.5, borderRadius: 6
     }]},
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend:{display:false} },
+      plugins: { legend:{ display:false } },
       scales: {
         y: { min:0, ticks:{stepSize:1,color:'#A88030'}, grid:{color:'rgba(200,160,40,0.15)'}, border:{color:'#F0D888'} },
         x: { ticks:{color:'#A88030',autoSkip:false,maxRotation:35,font:{size:11}}, grid:{display:false}, border:{color:'#F0D888'} }
@@ -765,6 +970,7 @@ function renderBonusChart() {
   });
 }
 
+/* ── Tabs ── */
 function switchTab(name, el) {
   currentTab = name;
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -775,6 +981,7 @@ function switchTab(name, el) {
   if (name==='bonus-chart') renderBonusChart();
 }
 
+/* ── Toast ── */
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
