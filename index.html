@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>😈 Don Abel's Passion Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFFBF0;
+    --surface: #FFFFFF;
+    --surface2: #FFF8E0;
+    --accent: #E8920A;
+    --accent-dark: #B86D00;
+    --accent-light: #FFD166;
+    --accent2: #FF6B00;
+    --diablo: #CC2200;
+    --text: #1A1000;
+    --text2: #6B4E00;
+    --text3: #A88030;
+    --border: #F0D888;
+    --border2: #E0C060;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  .site-header {
+    background: linear-gradient(135deg, #E8920A 0%, #FFB800 55%, #FF6B00 100%);
+    color: #fff;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 3px solid #C07000;
+  }
+  .site-header h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.18);
+  }
+  .header-sub {
+    font-size: 11px;
+    opacity: 0.85;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.05em;
+    margin-top: 2px;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    opacity: 0.9;
+  }
+  .sync-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #fff;
+    display: inline-block;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+
+  .diablo-banner {
+    display: none;
+    background: #CC2200;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    letter-spacing: 0.07em;
+    animation: flicker 0.9s infinite alternate;
+  }
+  @keyframes flicker { from{opacity:1} to{opacity:0.72} }
+  .diablo-banner.show { display: block; }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    display: grid;
+    grid-template-columns: 390px 1fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+  @media(max-width: 800px) { .container { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .card-header {
+    background: var(--surface2);
+    border-bottom: 1.5px solid var(--border);
+    padding: 14px 20px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-body { padding: 20px; }
+
+  label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 6px;
+  }
+  input[type=text], input[type=date], select {
+    width: 100%;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 9px 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--text);
+    transition: border-color 0.15s;
+    outline: none;
+  }
+  input:focus, select:focus { border-color: var(--accent); background: #fff; }
+  .field { margin-bottom: 14px; }
+
+  .slider-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  input[type=range] {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 7px;
+    border-radius: 4px;
+    outline: none;
+    background: linear-gradient(to right, var(--accent) 0%, var(--accent) var(--pct, 40%), var(--border2) var(--pct, 40%), var(--border2) 100%);
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid #fff;
+    box-shadow: 0 1px 6px rgba(232,146,10,0.45);
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+  input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+  .slider-val {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 32px;
+    color: var(--accent);
+    min-width: 42px;
+    text-align: center;
+    line-height: 1;
+    transition: color 0.2s;
+  }
+  .slider-val.diablo { color: var(--diablo); }
+  .slider-emoji { font-size: 28px; min-width: 36px; text-align: center; }
+  .slider-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text3); letter-spacing: 0.03em; margin-bottom: 16px; }
+
+  .mood-ring { display: flex; gap: 4px; margin-bottom: 12px; }
+  .mood-ring-dot { flex: 1; height: 6px; border-radius: 3px; background: var(--border); transition: background 0.2s; }
+
+  .level-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    border-radius: 99px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    margin-bottom: 16px;
+    border: 1.5px solid transparent;
+    transition: all 0.25s;
+  }
+
+  .bonus-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .bonus-btn {
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 99px;
+    padding: 6px 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    color: var(--text2);
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+  }
+  .bonus-btn:hover { border-color: var(--accent); color: var(--accent-dark); background: #FFF8E0; }
+  .bonus-btn.active { background: var(--accent); border-color: var(--accent-dark); color: #fff; }
+  .bonus-btn .cnt {
+    background: rgba(255,255,255,0.35);
+    border-radius: 99px;
+    padding: 0 5px;
+    font-size: 10px;
+    font-weight: 500;
+    display: none;
+    min-width: 18px;
+    text-align: center;
+  }
+  .bonus-btn.active .cnt { display: inline; }
+  .bonus-btn.flail-btn { border-color: #FFB800; color: #7A5000; }
+  .bonus-btn.flail-btn:hover, .bonus-btn.flail-btn.active { background: #FFB800; border-color: #C88800; color: #3A2600; }
+  .add-bonus-row { display: flex; gap: 6px; }
+  .add-bonus-row input { flex: 1; font-size: 12px; padding: 7px 10px; }
+
+  .btn-primary {
+    width: 100%;
+    background: linear-gradient(135deg, #E8920A 0%, #FFB800 100%);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 13px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-top: 6px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  }
+  .btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-sm {
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 7px 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    color: var(--text2);
+    transition: all 0.15s;
+  }
+  .btn-sm:hover { border-color: var(--accent); }
+
+  .tabs { display: flex; border-bottom: 1.5px solid var(--border); background: var(--surface2); padding: 0 20px; }
+  .tab {
+    padding: 12px 16px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text3);
+    cursor: pointer;
+    border-bottom: 2.5px solid transparent;
+    margin-bottom: -1.5px;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .tab:hover { color: var(--text2); }
+  .tab.active { color: var(--accent-dark); border-bottom-color: var(--accent); }
+
+  .log-scroll { max-height: 440px; overflow-y: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th {
+    font-family: 'Syne', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text3);
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1.5px solid var(--border);
+    background: var(--surface2);
+    position: sticky; top: 0;
+  }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #FFFBF0; }
+
+  .mood-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 500;
+    font-family: 'Syne', sans-serif;
+    border: 1px solid transparent;
+  }
+  .tag {
+    display: inline-block;
+    background: #FFF3CC;
+    border: 1px solid #F0D060;
+    color: #7A5000;
+    border-radius: 99px;
+    padding: 2px 8px;
+    font-size: 10px;
+    margin: 2px 2px 2px 0;
+  }
+
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1rem; }
+  .stat-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    text-align: center;
+  }
+  .stat-val {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 26px;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-label { font-size: 10px; color: var(--text3); letter-spacing: 0.05em; text-transform: uppercase; }
+
+  .chart-wrap { position: relative; width: 100%; }
+
+  .toast {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    background: var(--text);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-family: 'DM Mono', monospace;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: all 0.3s;
+    z-index: 999;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  .empty { text-align: center; padding: 3rem 1rem; color: var(--text3); font-size: 13px; }
+  .empty .big { font-size: 40px; margin-bottom: 8px; }
+  .loading { text-align: center; padding: 2rem; color: var(--text3); font-size: 12px; letter-spacing: 0.05em; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner {
+    display: inline-block; width: 16px; height: 16px;
+    border: 2px solid var(--border); border-top-color: var(--accent);
+    border-radius: 50%; animation: spin 0.7s linear infinite;
+    margin-right: 8px; vertical-align: middle;
+  }
+
+  .divider { height: 1px; background: var(--border); margin: 16px 0; }
+  .right-panel { display: flex; flex-direction: column; gap: 1rem; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .week-select { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text2); margin-bottom: 14px; }
+  .week-select select { width: auto; flex: none; font-size: 12px; padding: 5px 8px; }
+</style>
+</head>
+<body>
+
+<div class="diablo-banner" id="diabloBanner">😈 EL DIABLO HA LLEGADO — DON ABEL IS FULLY UNLEASHED 😈</div>
+
+<header class="site-header">
+  <div>
+    <h1>😈 Don Abel's Passion Tracker</h1>
+    <div class="header-sub">aka Pablo · El Diablo · The Legend</div>
+  </div>
+  <div class="header-right">
+    <span class="sync-dot"></span>
+    <span id="syncStatus">Live</span>
+    &nbsp;·&nbsp;
+    <span id="entryCount">0 entries</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <div>
+    <div class="card">
+      <div class="card-header">🌶️ Log Today's Don Abel</div>
+      <div class="card-body">
+
+        <div class="field">
+          <label>Passion level</label>
+          <div class="slider-wrap">
+            <span class="slider-emoji" id="moodEmoji">😐</span>
+            <input type="range" id="moodSlider" min="1" max="10" value="5" step="1" oninput="updateSlider(this.value)">
+            <span class="slider-val" id="moodVal">5</span>
+          </div>
+          <div class="mood-ring" id="moodRing"></div>
+          <div id="levelBadgeWrap"></div>
+          <div class="slider-labels">
+            <span>1 — Zen Don Abel 🧘</span>
+            <span>10 — 😈 El Diablo</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Bonus expressions &amp; actions</label>
+          <div class="bonus-grid" id="bonusGrid">
+            <button class="bonus-btn flail-btn" onclick="toggleBonus('flail','🙌 Arm flailing',this)">
+              🙌 Arm flailing <span class="cnt" id="cnt-flail">1</span>
+            </button>
+            <button class="bonus-btn" onclick="toggleBonus('mute','🤐 Gone mute',this)">
+              🤐 Gone mute <span class="cnt" id="cnt-mute">1</span>
+            </button>
+            <button class="bonus-btn" onclick="toggleBonus('table','👊 Table slap',this)">
+              👊 Table slap <span class="cnt" id="cnt-table">1</span>
+            </button>
+            <button class="bonus-btn" onclick="toggleBonus('pace','🚶 Pacing the room',this)">
+              🚶 Pacing the room <span class="cnt" id="cnt-pace">1</span>
+            </button>
+            <button class="bonus-btn" onclick="toggleBonus('eyes','🙄 Dramatic eye roll',this)">
+              🙄 Dramatic eye roll <span class="cnt" id="cnt-eyes">1</span>
+            </button>
+            <button class="bonus-btn" onclick="toggleBonus('phone','📞 Called in Spanish',this)">
+              📞 Called in Spanish <span class="cnt" id="cnt-phone">1</span>
+            </button>
+            <button class="bonus-btn" style="border-color:#FFB800;color:#7A5000;" onclick="toggleBonus('don','👑 Don Abel moment',this)">
+              👑 "Don Abel" moment <span class="cnt" id="cnt-don">1</span>
+            </button>
+          </div>
+          <div class="add-bonus-row">
+            <input type="text" id="newBonusInput" placeholder="New expression..." onkeydown="if(event.key==='Enter')addBonus()">
+            <button class="btn-sm" onclick="addBonus()">+ Add</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field">
+          <label>Date</label>
+          <input type="date" id="logDate">
+        </div>
+        <div class="field">
+          <label>Your name</label>
+          <input type="text" id="loggedBy" placeholder="Who's logging this?">
+        </div>
+        <div class="field">
+          <label>What set him off? (optional)</label>
+          <input type="text" id="logNotes" placeholder="e.g. someone moved his coffee mug">
+        </div>
+
+        <button class="btn-primary" onclick="submitLog()">⚡ Log it</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-panel">
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-val" id="statTotal">—</div><div class="stat-label">Total logs</div></div>
+      <div class="stat-card"><div class="stat-val" id="statAvg">—</div><div class="stat-label">Avg passion</div></div>
+      <div class="stat-card"><div class="stat-val" id="statPeak">—</div><div class="stat-label">Peak this week</div></div>
+      <div class="stat-card"><div class="stat-val" id="statFlails">—</div><div class="stat-label">Total flails 🙌</div></div>
+    </div>
+
+    <div class="card">
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab('history',this)">History</div>
+        <div class="tab" onclick="switchTab('chart',this)">Weekly chart</div>
+        <div class="tab" onclick="switchTab('bonus-chart',this)">Bonus tracker</div>
+      </div>
+
+      <div class="tab-panel active" id="panel-history">
+        <div class="log-scroll" id="historyTable">
+          <div class="loading"><span class="spinner"></span>Loading entries...</div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="panel-chart">
+        <div class="card-body">
+          <div class="week-select">
+            <span>Show:</span>
+            <select id="weekCount" onchange="renderChart()">
+              <option value="4">Last 4 weeks</option>
+              <option value="8">Last 8 weeks</option>
+              <option value="12">Last 12 weeks</option>
+              <option value="999">All time</option>
+            </select>
+          </div>
+          <div class="chart-wrap" style="height:280px;">
+            <canvas id="moodChart" role="img" aria-label="Line chart of Don Abel weekly average passion">Weekly passion averages.</canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="panel-bonus-chart">
+        <div class="card-body">
+          <div class="chart-wrap" style="height:300px;">
+            <canvas id="bonusChart" role="img" aria-label="Bar chart of bonus expression counts">Bonus expression counts.</canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const LOGS_KEY = 'don-abel-logs-v1';
+const BONUSES_KEY = 'don-abel-custom-bonuses-v1';
+
+let logs = [];
+let bonusActive = {};
+let customBonuses = JSON.parse(localStorage.getItem(BONUSES_KEY) || '[]');
+let chartInst = null, bonusChartInst = null, currentTab = 'history';
+
+const EMOJIS      = ['😌','😊','😶','😐','😤','😠','🤬','😡','🤯','😈'];
+const MOOD_COLORS = ['#22A05B','#60C040','#B0CC20','#E8C22E','#F0922E','#E8612E','#E03D1A','#C0280A','#A01800','#CC2200'];
+const MOOD_LABELS = ['Zen Don Abel','Chill','Neutral','Warming up','Simmering','Heated','Muy caliente 🌶️','FUEGO 🔥','INFERNO 🔥🔥','😈 El Diablo'];
+const BADGE_BG    = ['#E8F8EE','#D8F0D8','#F0F8D0','#FFF8D0','#FFF0D0','#FFE0C8','#FFD0B8','#FFB8A8','#FF9888','#CC2200'];
+const BADGE_FG    = ['#1A6B40','#1A6B40','#5A6B10','#8B6B00','#8B4A00','#8B2A00','#7A1800','#6A0800','#4A0400','#fff'];
+const BADGE_BD    = ['#A0DDB8','#88D0A0','#C8D888','#F0D060','#F0A060','#E07050','#CC5040','#BB3020','#AA2010','#990000'];
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('logDate').value = todayStr();
+  buildMoodRing(5);
+  updateLevelBadge(5);
+  renderCustomBonuses();
+  loadLogs();
+});
+
+function todayStr() { return new Date().toISOString().split('T')[0]; }
+
+function loadLogs() {
+  try { logs = JSON.parse(localStorage.getItem(LOGS_KEY) || '[]'); } catch(e) { logs = []; }
+  refreshAll();
+}
+function saveLogs() {
+  try { localStorage.setItem(LOGS_KEY, JSON.stringify(logs)); } catch(e) {}
+}
+
+function updateSlider(v) {
+  v = parseInt(v);
+  document.getElementById('moodVal').textContent = v;
+  document.getElementById('moodEmoji').textContent = EMOJIS[v-1];
+  const pct = ((v-1)/9*100).toFixed(1);
+  document.getElementById('moodSlider').style.setProperty('--pct', pct+'%');
+  document.getElementById('moodVal').classList.toggle('diablo', v === 10);
+  buildMoodRing(v);
+  updateLevelBadge(v);
+  document.getElementById('diabloBanner').classList.toggle('show', v === 10);
+}
+
+function updateLevelBadge(v) {
+  document.getElementById('levelBadgeWrap').innerHTML =
+    `<span class="level-badge" style="background:${BADGE_BG[v-1]};color:${BADGE_FG[v-1]};border-color:${BADGE_BD[v-1]};">
+      ${EMOJIS[v-1]} Level ${v} — ${MOOD_LABELS[v-1]}
+    </span>`;
+}
+
+function buildMoodRing(v) {
+  const ring = document.getElementById('moodRing');
+  ring.innerHTML = '';
+  for (let i=1; i<=10; i++) {
+    const d = document.createElement('div');
+    d.className = 'mood-ring-dot';
+    if (i <= v) d.style.background = MOOD_COLORS[v-1];
+    ring.appendChild(d);
+  }
+}
+
+function toggleBonus(key, label, el) {
+  if (bonusActive[key]) {
+    bonusActive[key].count++;
+    document.getElementById('cnt-'+key).textContent = bonusActive[key].count;
+  } else {
+    bonusActive[key] = { count: 1, label };
+    el.classList.add('active');
+    document.getElementById('cnt-'+key).textContent = 1;
+  }
+}
+
+function addBonus() {
+  const inp = document.getElementById('newBonusInput');
+  const val = inp.value.trim();
+  if (!val) return;
+  const key = 'c_' + Date.now();
+  customBonuses.push({ key, label: val });
+  localStorage.setItem(BONUSES_KEY, JSON.stringify(customBonuses));
+  renderCustomBonuses();
+  inp.value = '';
+}
+
+function renderCustomBonuses() {
+  const grid = document.getElementById('bonusGrid');
+  grid.querySelectorAll('.custom-bonus').forEach(el => el.remove());
+  customBonuses.forEach(b => {
+    const btn = document.createElement('button');
+    btn.className = 'bonus-btn custom-bonus';
+    btn.id = 'bonus-'+b.key;
+    btn.innerHTML = `✨ ${b.label} <span class="cnt" id="cnt-${b.key}">1</span>`;
+    btn.onclick = () => toggleBonus(b.key, '✨ '+b.label, btn);
+    grid.appendChild(btn);
+  });
+}
+
+function submitLog() {
+  const mood = parseInt(document.getElementById('moodSlider').value);
+  const date = document.getElementById('logDate').value;
+  const by   = document.getElementById('loggedBy').value.trim() || 'Anonymous';
+  const notes = document.getElementById('logNotes').value.trim();
+  if (!date) { showToast('Pick a date first!'); return; }
+
+  const bonuses = Object.keys(bonusActive).map(k => ({
+    key: k, label: bonusActive[k].label, count: bonusActive[k].count
+  }));
+
+  logs.unshift({ id: Date.now(), date, mood, by, notes, bonuses });
+  saveLogs();
+
+  bonusActive = {};
+  document.querySelectorAll('.bonus-btn.active').forEach(b => b.classList.remove('active'));
+  document.getElementById('moodSlider').value = 5;
+  updateSlider(5);
+  document.getElementById('logNotes').value = '';
+  document.getElementById('logDate').value = todayStr();
+
+  refreshAll();
+  showToast(mood === 10 ? '😈 El Diablo logged! Dios mío.' : 'Logged! 🌶️');
+  switchTab('history', document.querySelectorAll('.tab')[0]);
+}
+
+function refreshAll() {
+  updateStats();
+  renderHistory();
+  if (currentTab === 'chart') renderChart();
+  if (currentTab === 'bonus-chart') renderBonusChart();
+  document.getElementById('entryCount').textContent = logs.length + (logs.length === 1 ? ' entry' : ' entries');
+}
+
+function updateStats() {
+  document.getElementById('statTotal').textContent = logs.length || '0';
+  if (logs.length) {
+    document.getElementById('statAvg').textContent = (logs.reduce((s,e)=>s+e.mood,0)/logs.length).toFixed(1);
+  } else { document.getElementById('statAvg').textContent = '—'; }
+  const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate()-7);
+  const peak = logs.filter(e=>new Date(e.date)>=weekAgo).reduce((m,e)=>Math.max(m,e.mood),0);
+  document.getElementById('statPeak').textContent = peak ? (peak===10?'😈':peak) : '—';
+  const flails = logs.reduce((s,e)=>s+((e.bonuses||[]).find(b=>b.key==='flail')?.count||0),0);
+  document.getElementById('statFlails').textContent = flails || '0';
+}
+
+function renderHistory() {
+  const cont = document.getElementById('historyTable');
+  if (!logs.length) {
+    cont.innerHTML = '<div class="empty"><div class="big">📋</div>No entries yet.<br>Start logging Don Abel\'s finest moments.</div>';
+    return;
+  }
+  let html = `<table><thead><tr><th>Date</th><th>Mood</th><th>Level</th><th>Bonuses</th><th>By</th><th>Notes</th></tr></thead><tbody>`;
+  logs.forEach(e => {
+    const col   = MOOD_COLORS[e.mood-1];
+    const label = MOOD_LABELS[e.mood-1];
+    const tags  = (e.bonuses||[]).map(b=>`<span class="tag">${b.label.slice(0,22)}${b.count>1?' ×'+b.count:''}</span>`).join('');
+    html += `<tr style="${e.mood===10?'background:#FFF0F0;':''}">
+      <td style="white-space:nowrap;color:var(--text2);">${e.date}</td>
+      <td style="text-align:center;font-size:20px;">${EMOJIS[e.mood-1]}</td>
+      <td><span class="mood-pill" style="background:${col}22;color:${col};border-color:${col}55;">${e.mood}/10 ${label}</span></td>
+      <td>${tags||'<span style="color:var(--text3)">—</span>'}</td>
+      <td style="color:var(--text2);white-space:nowrap;">${e.by}</td>
+      <td style="color:var(--text3);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${e.notes||'—'}</td>
+    </tr>`;
+  });
+  cont.innerHTML = html + '</tbody></table>';
+}
+
+function getWeekStart(dateStr) {
+  const d = new Date(dateStr), day = d.getDay();
+  const m = new Date(d); m.setDate(d.getDate()-day+(day===0?-6:1));
+  return m.toISOString().split('T')[0];
+}
+
+function renderChart() {
+  const limit = parseInt(document.getElementById('weekCount').value);
+  if (!logs.length) return;
+  const weekMap = {};
+  logs.forEach(e => { const wk=getWeekStart(e.date); (weekMap[wk]=weekMap[wk]||[]).push(e.mood); });
+  let weeks = Object.keys(weekMap).sort();
+  if (limit < 999) weeks = weeks.slice(-limit);
+  const labels = weeks.map(w => new Date(w).toLocaleDateString('en-GB',{day:'numeric',month:'short'}));
+  const avgs   = weeks.map(w => Math.round((weekMap[w].reduce((a,b)=>a+b,0)/weekMap[w].length)*10)/10);
+  if (chartInst) chartInst.destroy();
+  chartInst = new Chart(document.getElementById('moodChart'), {
+    type: 'line',
+    data: { labels, datasets: [{
+      label: 'Avg passion', data: avgs,
+      borderColor: '#E8920A', backgroundColor: 'rgba(232,146,10,0.10)',
+      borderWidth: 2.5, fill: true, tension: 0.45,
+      pointBackgroundColor: avgs.map(v=>MOOD_COLORS[Math.round(v)-1]),
+      pointBorderColor: '#fff', pointBorderWidth: 2, pointRadius: 7, pointHoverRadius: 9
+    }]},
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => {
+          const v = Math.round(ctx.parsed.y);
+          return ` ${ctx.parsed.y}/10 — ${MOOD_LABELS[v-1]}`;
+        }}}
+      },
+      scales: {
+        y: { min:0, max:10, ticks:{stepSize:2,color:'#A88030'}, grid:{color:'rgba(200,160,40,0.15)'}, border:{color:'#F0D888'} },
+        x: { ticks:{color:'#A88030',autoSkip:false,maxRotation:30}, grid:{display:false}, border:{color:'#F0D888'} }
+      }
+    }
+  });
+}
+
+function renderBonusChart() {
+  if (!logs.length) return;
+  const counts = {};
+  logs.forEach(e => (e.bonuses||[]).forEach(b => { counts[b.label]=(counts[b.label]||0)+b.count; }));
+  const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  const labels = sorted.map(x=>x[0].replace(/^.{1,3}\s/,'').slice(0,24));
+  const data   = sorted.map(x=>x[1]);
+  const cols   = ['#E8920A','#FFB800','#FF6B00','#CC2200','#1E7E4A','#1A3C6E','#8B5E00','#993556','#444441','#534AB7'];
+  if (bonusChartInst) bonusChartInst.destroy();
+  bonusChartInst = new Chart(document.getElementById('bonusChart'), {
+    type: 'bar',
+    data: { labels, datasets: [{
+      label: 'Incidents', data,
+      backgroundColor: data.map((_,i)=>cols[i%cols.length]+'BB'),
+      borderColor: data.map((_,i)=>cols[i%cols.length]),
+      borderWidth: 1.5, borderRadius: 6
+    }]},
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend:{display:false} },
+      scales: {
+        y: { min:0, ticks:{stepSize:1,color:'#A88030'}, grid:{color:'rgba(200,160,40,0.15)'}, border:{color:'#F0D888'} },
+        x: { ticks:{color:'#A88030',autoSkip:false,maxRotation:35,font:{size:11}}, grid:{display:false}, border:{color:'#F0D888'} }
+      }
+    }
+  });
+}
+
+function switchTab(name, el) {
+  currentTab = name;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  (el||document.querySelectorAll('.tab')[0]).classList.add('active');
+  document.getElementById('panel-'+name).classList.add('active');
+  if (name==='chart') renderChart();
+  if (name==='bonus-chart') renderBonusChart();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+</script>
+</body>
+</html>
